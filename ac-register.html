@@ -28,6 +28,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     localStorage.setItem('authToken', data.data.token);  
+                    localStorage.setItem('userId', data.data.userId);
                     document.getElementById("resultDisplay").textContent = "User registered successfully. Your token is stored in local storage.";
                 } else {
                     throw new Error('Registration failed');

@@ -29,6 +29,7 @@
                     const data = await response.json();
 
                     localStorage.setItem('authToken', data.data.token);
+                    localStorage.setItem('userId', data.data.userId);
                     document.getElementById("resultDisplay").textContent = "Login successful! Your token is stored in local storage.";
                 } else {
                     throw new Error('Failed to login');
