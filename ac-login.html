@@ -22,12 +22,14 @@
                         password: password,
                         captcha: token
                     }),
-                    credentials: "include"
+
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    document.getElementById("resultDisplay").textContent = "Login successful! Check the 'Application' tab in developer tools to get the JWT from cookie.";
+
+                    localStorage.setItem('authToken', data.token);
+                    document.getElementById("resultDisplay").textContent = "Login successful! Your token is stored in local storage.";
                 } else {
                     throw new Error('Failed to login');
                 }
@@ -41,7 +43,7 @@
 
 <body>
     <h2>User Login</h2>
-    <form id="loginForm" onsubmit="event.preventDefault();">
+    <form id="loginForm" onsubmit="event.preventDefault(); grecaptcha.execute();">
         <div>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>

@@ -13,7 +13,7 @@
             const displayName = document.getElementById("displayName").value;
 
             try {
-                await fetch('https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/auth/register', {
+                const response = await fetch('https://hdbnlbixq2.execute-api.us-east-1.amazonaws.com/auth/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -23,19 +23,18 @@
                         password: password,
                         displayName: displayName,
                         captcha: token
-                    }),
-                    credentials: "include"
-                })
+                    })
+                });
                 if (response.ok) {
                     const data = await response.json();
-                    document.getElementById("resultDisplay").textContent = "User registered successfully\n Check the 'Application' tab in developer tools to get the JWT from cookie.";
+                    localStorage.setItem('authToken', data.token);  
+                    document.getElementById("resultDisplay").textContent = "User registered successfully. Your token is stored in local storage.";
                 } else {
-                    throw new Error('Failed to login');
+                    throw new Error('Registration failed');
                 }
-                
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById("resultDisplay").textContent = "Error registering user";
+                document.getElementById("resultDisplay").textContent = "Error registering user: " + error.message;
             }
         }
     </script>
@@ -43,7 +42,7 @@
 
 <body>
     <h2>User Registration</h2>
-    <form id="registrationForm" onsubmit="event.preventDefault();">
+    <form id="registrationForm" onsubmit="event.preventDefault(); grecaptcha.execute();">
         <div>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
